@@ -1,10 +1,10 @@
 import { NextAuthOptions, User, getServerSession } from "next-auth";
-import GoogleProvider from "next-auth/providers/google";
 import GithubProvider from "next-auth/providers/github";
 import jsonwebtoken from "jsonwebtoken";
 import { JWT } from "next-auth/jwt";
 import { SessionInterface, UserProfile } from "@/common.types";
 import { AdapterUser } from "next-auth/adapters";
+import { createUser, getUser } from "./actions";
 
 export const authOptions: NextAuthOptions = {
   debug: true,
@@ -43,12 +43,12 @@ export const authOptions: NextAuthOptions = {
     async session({ session }) {
       const email = session?.user?.email as string;
       try {
-        // const data = await getUser(email) as { user?: UserProfile }
+        const data = (await getUser(email)) as { user?: UserProfile };
         const newSession = {
           ...session,
           user: {
             ...session.user,
-            // ...data?.user,
+            ...data?.user,
           },
         };
         return session;
@@ -59,17 +59,17 @@ export const authOptions: NextAuthOptions = {
     },
     async signIn({ user }: { user: AdapterUser | User }) {
       try {
-        //   const userExists = (await getUser(user?.email as string)) as {
-        //     user?: UserProfile;
-        //   };
+        const userExists = (await getUser(user?.email as string)) as {
+          user?: UserProfile;
+        };
 
-        //   if (!userExists.user) {
-        //     await createUser(
-        //       user.name as string,
-        //       user.email as string,
-        //       user.image as string
-        //     );
-        //   }
+        if (!userExists.user) {
+          await createUser(
+            user.name as string,
+            user.email as string,
+            user.image as string
+          );
+        }
 
         return true;
       } catch (error: any) {
