@@ -1,0 +1,51 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+generator photos {
+  provider = "prisma-pothos-types"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String    @id @default(uuid())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  username  String
+  password  String?
+  email     String?   @unique
+  avatarUrl String?
+  projects  Project[]
+  role      Role      @default(USER)
+}
+
+model Project {
+  id          String   @id @default(uuid())
+  title       String
+  description String
+  imageUrl    String
+  websiteUrl  String
+  githubUrl   String
+  user        User     @relation(fields: [userId], references: [id])
+  userId      String
+  category    Category @relation(fields: [categoryId], references: [id])
+  categoryId  String
+}
+
+model Category {
+  id      String    @id @default(uuid())
+  name    String
+  project Project[]
+}
+
+enum Role {
+  USER
+  ADMIN
+}
