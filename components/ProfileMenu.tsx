@@ -17,9 +17,9 @@ const ProfileMenu = ({ session }: { session: SessionInterface }) => {
           className="flexCenter"
           onMouseEnter={() => setOpenModal(true)}
         >
-          {session?.user?.image && (
+          {session?.user.avatarUrl && (
             <Image
-              src={session.user.image}
+              src={session.user.avatarUrl}
               width={40}
               height={40}
               className="rounded-full"
@@ -52,7 +52,7 @@ const ProfileMenu = ({ session }: { session: SessionInterface }) => {
                   alt="profile Image"
                 />
               )}
-              <p className="font-semibold">{session?.user?.name}</p>
+              <p className="font-semibold">{session?.user?.username}</p>
             </div>
 
             <div className="flex flex-col gap-3 pt-10 items-start w-full">

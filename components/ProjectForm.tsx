@@ -9,26 +9,36 @@ import Button from "./Button";
 import CustomMenu from "./CustomMenu";
 import { categoryFilters } from "@/constant";
 import { updateProject, createNewProject, fetchToken } from "@/lib/actions";
-import { FormState, ProjectInterface, SessionInterface } from "@/common.types";
+import {
+  Category,
+  FormState,
+  ProjectInterface,
+  SessionInterface,
+} from "@/common.types";
+import { useSession } from "next-auth/react";
 
 type Props = {
   type: string;
-  session: SessionInterface;
+  // session: SessionInterface;
   project?: ProjectInterface;
 };
 
-const ProjectForm = ({ type, session, project }: Props) => {
+const ProjectForm = ({ type, project }: Props) => {
+  const { data: session } = useSession();
   const router = useRouter();
   const [submitting, setSubmitting] = useState<boolean>(false);
   const [form, setForm] = useState<FormState>({
     title: project?.title || "",
     description: project?.description || "",
-    image: project?.image || "",
-    liveSiteUrl: project?.liveSiteUrl || "",
+    imageUrl: project?.imageUrl || "",
+    websiteUrl: project?.websiteUrl || "",
     githubUrl: project?.githubUrl || "",
-    category: project?.category || "",
+    category: project?.category || { id: "", name: "" },
   });
-  const handleStateChange = (fieldName: keyof FormState, value: string) => {
+  const handleStateChange = (
+    fieldName: keyof FormState,
+    value: string | Category
+  ) => {
     setForm((prevForm) => ({ ...prevForm, [fieldName]: value }));
   };
   const handleChangeImage = (e: ChangeEvent<HTMLInputElement>) => {
@@ -41,9 +51,20 @@ const ProjectForm = ({ type, session, project }: Props) => {
     }
     const reader = new FileReader();
     reader.readAsDataURL(file);
-    reader.onload = () => {
+    reader.onload = async () => {
       const result = reader.result as string;
-      handleStateChange("image", result);
+      try {
+        const response = await fetch(`http://localhost:3000/api/upload`, {
+          method: "POST",
+          body: JSON.stringify({
+            path: result,
+          }),
+        });
+        const res = await response.json();
+        handleStateChange("imageUrl", res.url);
+      } catch (err) {
+        throw err;
+      }
     };
   };
   const handleFormSubmit = async (e: FormEvent) => {
@@ -53,12 +74,20 @@ const ProjectForm = ({ type, session, project }: Props) => {
     console.log("session", session);
     try {
       if (type === "create") {
-        await createNewProject(form, session?.user?.id, token);
-        router.push("/");
+        const res = await fetch("http://localhost:3000/api/project/create", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(form),
+        });
+        console.log(res);
+        // await createNewProject(form, session?.user?.id, token);
+        router.push("/home");
       }
       if (type === "edit") {
-        await updateProject(form, project?.id as string, token);
-        router.push("/");
+        // await updateProject(form, project?.id as string, token);
+        router.push("/home");
       }
     } catch (error) {
       console.log(error);
@@ -76,7 +105,7 @@ const ProjectForm = ({ type, session, project }: Props) => {
     <form onSubmit={handleFormSubmit} className="flexStart form">
       <div className="flexStart form_image-container">
         <label htmlFor="poster" className="flexCenter form_image-label">
-          {!form.image && "Choose a poster for your project"}
+          {!form.imageUrl && "Choose a poster for your project"}
         </label>
         <input
           id="image"
@@ -86,9 +115,9 @@ const ProjectForm = ({ type, session, project }: Props) => {
           className="form_image-input"
           onChange={(e) => handleChangeImage(e)}
         />
-        {form.image && (
+        {form.imageUrl && (
           <Image
-            src={form?.image}
+            src={form?.imageUrl}
             className="sm:p-10 object-contain z-20"
             alt="image"
             fill
@@ -113,9 +142,9 @@ const ProjectForm = ({ type, session, project }: Props) => {
       <FormField
         type="url"
         title="Website URL"
-        state={form.liveSiteUrl}
+        state={form.websiteUrl}
         placeholder="https://jsmastery.pro"
-        setState={(value) => handleStateChange("liveSiteUrl", value)}
+        setState={(value) => handleStateChange("websiteUrl", value)}
       />
 
       <FormField
@@ -128,7 +157,7 @@ const ProjectForm = ({ type, session, project }: Props) => {
 
       <CustomMenu
         title="Category"
-        state={form.category}
+        state={form.category.name}
         filters={categoryFilters}
         setState={(value) => handleStateChange("category", value)}
       />

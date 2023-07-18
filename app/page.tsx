@@ -79,13 +79,12 @@ const AllLinksQuery = gql`
   }
 `;
 const Home = async () => {
-  const { data, loading, error } = await getClient().query({
-    query: AllLinksQuery,
-  });
-  console.log(data);
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Oh no... {error.message}</p>;
-  return <div>{}</div>;
+  // const { data, loading, error } = await getClient().query({
+  //   query: AllLinksQuery,
+  // });
+  // if (loading) return <p>Loading...</p>;
+  // if (error) return <p>Oh no... {error.message}</p>;
+  return <div>{123}</div>;
 };
 
 export default Home;

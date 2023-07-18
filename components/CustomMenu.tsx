@@ -3,12 +3,13 @@
 import { Fragment } from "react";
 import { Menu, Transition } from "@headlessui/react";
 import Image from "next/image";
+import { Category } from "@/common.types";
 
 type Props = {
   title: string;
   state: string;
-  filters: Array<string>;
-  setState: (value: string) => void;
+  filters: Array<{ id: string; name: string }>;
+  setState: (arg: Category | undefined) => void;
 };
 
 const CustomMenu = ({ title, state, filters, setState }: Props) => (
@@ -34,14 +35,18 @@ const CustomMenu = ({ title, state, filters, setState }: Props) => (
       >
         <Menu.Items className="flexStart custom_menu-items">
           {filters.map((tag) => (
-            <Menu.Item key={tag}>
+            <Menu.Item key={tag.id}>
               <button
                 type="button"
-                value={tag}
+                value={tag.name}
                 className="custom_menu-item"
-                onClick={(e) => setState(e.currentTarget.value)}
+                onClick={(e) => {
+                  setState(
+                    filters.find((item) => e.currentTarget.value === item.name)
+                  );
+                }}
               >
-                {tag}
+                {tag.name}
               </button>
             </Menu.Item>
           ))}

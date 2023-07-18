@@ -1,28 +1,33 @@
 import { User, Session } from "next-auth";
 
+export interface Category {
+  id: string;
+  name: string;
+}
+
 export type FormState = {
   title: string;
   description: string;
-  image: string;
-  liveSiteUrl: string;
+  imageUrl: string;
+  websiteUrl: string;
   githubUrl: string;
-  category: string;
+  category: Category;
 };
 
 export interface ProjectInterface {
   title: string;
   description: string;
-  image: string;
-  liveSiteUrl: string;
+  imageUrl: string;
+  websiteUrl: string;
   githubUrl: string;
-  category: string;
+  category: Category;
   id: string;
-  createdBy: {
-    name: string;
-    email: string;
-    avatarUrl: string;
-    id: string;
-  };
+  // createdBy: {
+  //   name: string;
+  //   email: string;
+  //   avatarUrl: string;
+  //   id: string;
+  // };
 }
 
 export interface UserProfile {
@@ -47,7 +52,7 @@ export interface UserProfile {
 export interface SessionInterface extends Session {
   user: User & {
     id: string;
-    name: string;
+    username: string;
     email: string;
     avatarUrl: string;
   };

@@ -20,19 +20,22 @@ export const authOptions: NextAuthOptions = {
   ],
   jwt: {
     encode: ({ secret, token }) => {
-      const encodedToken = jsonwebtoken.sign(
-        {
-          ...token,
-          iss: "grafbase",
-          exp: Math.floor(Date.now() / 1000) + 60 * 60,
-        },
-        secret
-      );
-      return encodedToken;
+      console.log(secret, token);
+
+      // const encodedToken = jsonwebtoken.sign(
+      //   {
+      //     ...token,
+      //     iss: "grafbase",
+      //     exp: Math.floor(Date.now() / 1000) + 60 * 60,
+      //   },
+      //   secret
+      // );
+      // return encodedToken;
     },
     decode: async ({ secret, token }) => {
-      const decodedToken = jsonwebtoken.verify(token!, secret);
-      return decodedToken as JWT;
+      console.log(secret, token);
+      // const decodedToken = jsonwebtoken.verify(token!, secret);
+      // return decodedToken as JWT;
     },
   },
   theme: {
@@ -40,42 +43,52 @@ export const authOptions: NextAuthOptions = {
     logo: "/logo.svg",
   },
   callbacks: {
-    async session({ session }) {
-      const email = session?.user?.email as string;
-      try {
-        const data = (await getUser(email)) as { user?: UserProfile };
-        const newSession = {
-          ...session,
-          user: {
-            ...session.user,
-            ...data?.user,
-          },
-        };
-        return session;
-      } catch (error: any) {
-        console.error("Error retrieving user data: ", error.message);
-        return session;
+    async jwt({ token, account }) {
+      console.log(token, account);
+      // Persist the OAuth access_token to the token right after signin
+      if (account) {
+        token.accessToken = account.access_token;
       }
+      return token;
+    },
+    async session({ session }) {
+      console.log("session", session);
+      // const email = session?.user?.email as string;
+      // try {
+      //   const data = (await getUser(email)) as { user?: UserProfile };
+      //   const newSession = {
+      //     ...session,
+      //     user: {
+      //       ...session.user,
+      //       ...data?.user,
+      //     },
+      //   };
+      //   return session;
+      // } catch (error: any) {
+      //   console.error("Error retrieving user data: ", error.message);
+      //   return session;
+      // }
     },
     async signIn({ user }: { user: AdapterUser | User }) {
-      try {
-        const userExists = (await getUser(user?.email as string)) as {
-          user?: UserProfile;
-        };
+      console.log("user", user);
+      // try {
+      //   const userExists = (await getUser(user?.email as string)) as {
+      //     user?: UserProfile;
+      //   };
 
-        if (!userExists.user) {
-          await createUser(
-            user.name as string,
-            user.email as string,
-            user.image as string
-          );
-        }
+      //   if (!userExists.user) {
+      //     await createUser(
+      //       user.name as string,
+      //       user.email as string,
+      //       user.image as string
+      //     );
+      //   }
 
-        return true;
-      } catch (error: any) {
-        console.log("Error checking if user exists: ", error.message);
-        return false;
-      }
+      //   return true;
+      // } catch (error: any) {
+      //   console.log("Error checking if user exists: ", error.message);
+      //   return false;
+      // }
     },
   },
 };

@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import Image from "next/image";
 
@@ -7,9 +9,10 @@ import AuthProviders from "./AuthProviders";
 import { getCurrentUser } from "@/lib/sessions";
 import ProfileMenu from "./ProfileMenu";
 import Button from "./Button";
+import { useSession } from "next-auth/react";
 
-const Navbar = async () => {
-  const session = await getCurrentUser();
+const Navbar = () => {
+  const { data: session } = useSession();
 
   return (
     <nav className="flexBetween navbar">

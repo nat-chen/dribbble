@@ -8,7 +8,7 @@ import { ProjectInterface } from "@/common.types";
 
 const EditProject = async ({ params: { id } }: { params: { id: string } }) => {
   const session = await getCurrentUser();
-  if (!session?.user) redirect("/");
+  // if (!session?.user) redirect("/");
   const result = (await getProjectDetails(id)) as {
     project?: ProjectInterface;
   };

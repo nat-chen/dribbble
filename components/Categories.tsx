@@ -19,16 +19,16 @@ const Categories = () => {
       <ul className="flex gap-2 overflow-auto">
         {categoryFilters.map((filter) => (
           <button
-            key={filter}
+            key={filter.id}
             type="button"
-            onClick={() => handleTags(filter)}
+            onClick={() => handleTags(filter.name)}
             className={`${
-              category === filter
+              category === filter.name
                 ? "bg-light-white-300 font-medium"
                 : "font-normal"
             } px-4 py-3 rounded-lg capitalize whitespace-nowrap`}
           >
-            {filter}
+            {filter.name}
           </button>
         ))}
       </ul>

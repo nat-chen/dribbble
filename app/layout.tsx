@@ -2,7 +2,6 @@ import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { ApolloProvider } from "@apollo/client";
-import { getClient } from "@/lib/apollo";
 import { ApolloWrapper } from "@/lib/apollo-wrapper";
 
 export const metadata = {
@@ -19,9 +18,10 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <ApolloWrapper>
-          <Navbar />
+          {children}
+          {/* <Navbar />
           <main>{children}</main>
-          <Footer />
+          <Footer /> */}
         </ApolloWrapper>
       </body>
     </html>
