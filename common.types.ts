@@ -32,12 +32,12 @@ export interface ProjectInterface {
 
 export interface UserProfile {
   id: string;
-  name: string;
+  username: string;
   email: string;
   description: string | null;
   avatarUrl: string;
   githubUrl: string | null;
-  linkedinUrl: string | null;
+  websiteUrl: string | null;
   projects: {
     edges: { node: ProjectInterface }[];
     pageInfo: {

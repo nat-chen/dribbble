@@ -3,12 +3,63 @@
 import Input from "@/components/Input";
 import Link from "next/link";
 import Image from "next/image";
-import { ChangeEvent, FormEvent, useState } from "react";
+import { useState } from "react";
+import { redirect } from "next/navigation";
+
+import { toast } from "react-toastify";
+import { signIn } from "next-auth/react";
 
 const Signup = ({ children }: { children: React.ReactNode }) => {
-  const [username, setUsername] = useState<string>("");
-  const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
+  const [form, setForm] = useState({
+    username: "",
+    email: "",
+    password: "",
+  });
+  const handleFormChange = (type: string, value: string) => {
+    setForm({
+      ...form,
+      [type]: value,
+    });
+  };
+  const handleAccountRegister = async () => {
+    const isValid = validateForm();
+    if (!isValid) return;
+
+    await fetch("http://localhost:3000/api/account", {
+      method: "POST",
+      body: JSON.stringify(form),
+    }).then(async (res) => {
+      const { success, message } = await res.json();
+      if (success) {
+        toast.success("Sign up successfully");
+        setTimeout(() => {
+          signIn("credentials", {
+            callbackUrl: "/home",
+            redirect: true,
+          });
+        }, 1000);
+      } else {
+        toast.error(message);
+      }
+    });
+  };
+
+  const validateForm = function (): boolean {
+    let isValid = true;
+    if (!form.username) {
+      isValid = false;
+      toast.error("Username is empty");
+    }
+    if (!form.email) {
+      isValid = false;
+      toast.error("Email is empty");
+    }
+    if (!form.password || form.password.length < 5) {
+      isValid = false;
+      toast.error("Password should be at least 6 characters");
+    }
+    return isValid;
+  };
 
   return (
     <div className="m-24">
@@ -32,40 +83,38 @@ const Signup = ({ children }: { children: React.ReactNode }) => {
         <div className="py-4">
           <Input
             title="Username"
-            value={username}
-            handleChange={(e: ChangeEvent<HTMLInputElement>) =>
-              setUsername(e.target.value)
-            }
+            value={form.username}
+            handleChange={(e) => handleFormChange("username", e.target.value)}
           />
         </div>
 
         <div className="py-4">
           <Input
             title="Email"
-            value={email}
-            handleChange={(e: ChangeEvent<HTMLInputElement>) =>
-              setUsername(e.target.value)
-            }
+            value={form.email}
+            handleChange={(e) => handleFormChange("email", e.target.value)}
           />
         </div>
 
         <div className="py-4">
           <Input
+            type="password"
             title="Password"
-            value={password}
+            value={form.password}
             placeholder="6+ characters"
-            handleChange={(e: ChangeEvent<HTMLInputElement>) =>
-              setUsername(e.target.value)
-            }
+            handleChange={(e) => handleFormChange("password", e.target.value)}
           />
         </div>
 
-        <button className="flex w-full justify-center bg-slate-950 text-slate-50 py-4 my-6 rounded-md">
+        <button
+          className="flex w-full justify-center bg-slate-950 text-slate-50 py-4 my-6 rounded-md"
+          onClick={handleAccountRegister}
+        >
           Create Account
         </button>
         <div>
           Already a member?{" "}
-          <Link href="/signin" className="text-indigo-600">
+          <Link href="/auth/signin" className="text-indigo-600">
             Sign In
           </Link>
         </div>

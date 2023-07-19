@@ -20,9 +20,9 @@ const ProfilePage = ({ user }: Props) => (
           className="rounded-full"
           alt="user image"
         />
-        <p className="text-4xl font-bold mt-10">{user?.name}</p>
+        <p className="text-4xl font-bold mt-10">{user?.username}</p>
         <p className="md:text-5xl text-3xl font-extrabold md:mt-10 mt-5 max-w-lg">
-          I’m Software Engineer at JSM 👋
+          I’m Software Engineer👋
         </p>
 
         <div className="flex mt-8 gap-5 w-full flex-wrap">
@@ -38,9 +38,9 @@ const ProfilePage = ({ user }: Props) => (
         </div>
       </div>
 
-      {user?.projects?.edges?.length > 0 ? (
+      {user?.projects?.length > 0 ? (
         <Image
-          src={user?.projects?.edges[0]?.node?.image}
+          src={user?.projects[0].imageUrl}
           alt="project image"
           width={739}
           height={554}
@@ -61,13 +61,13 @@ const ProfilePage = ({ user }: Props) => (
       <p className="w-full text-left text-lg font-semibold">Recent Work</p>
 
       <div className="profile_projects">
-        {user?.projects?.edges?.map(({ node }: { node: ProjectInterface }) => (
+        {user?.projects?.map((node) => (
           <ProjectCard
             key={`${node?.id}`}
             id={node?.id}
-            image={node?.image}
+            image={node?.imageUrl}
             title={node?.title}
-            name={user.name}
+            name={user.username}
             avatarUrl={user.avatarUrl}
             userId={user.id}
           />

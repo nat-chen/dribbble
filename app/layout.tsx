@@ -3,6 +3,9 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { ApolloProvider } from "@apollo/client";
 import { ApolloWrapper } from "@/lib/apollo-wrapper";
+import { Providers } from "@/redux/provider";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export const metadata = {
   title: "Flexibble",
@@ -17,12 +20,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <ApolloWrapper>
-          {children}
-          {/* <Navbar />
-          <main>{children}</main>
-          <Footer /> */}
-        </ApolloWrapper>
+        <Providers>
+          <ApolloWrapper>{children}</ApolloWrapper>
+          <ToastContainer />
+        </Providers>
       </body>
     </html>
   );

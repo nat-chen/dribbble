@@ -24,7 +24,6 @@ const EditProject = ({ params: { id } }: { params: { id: string } }) => {
     };
     fetchProjectDetails();
   }, [params.id]);
-
   if (!project) {
     return <p className="no-result-text">Failed to fetch project info</p>;
   }

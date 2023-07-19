@@ -1,14 +1,13 @@
 "use client";
 
 import Image from "next/image";
-import React, { ChangeEvent, FormEvent, useState } from "react";
+import React, { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
 import FormField from "./FormField";
 import Button from "./Button";
 import CustomMenu from "./CustomMenu";
 import { categoryFilters } from "@/constant";
-import { updateProject, createNewProject, fetchToken } from "@/lib/actions";
 import {
   Category,
   FormState,
@@ -16,6 +15,7 @@ import {
   SessionInterface,
 } from "@/common.types";
 import { useSession } from "next-auth/react";
+import { totalmem } from "os";
 
 type Props = {
   type: string;
@@ -28,13 +28,23 @@ const ProjectForm = ({ type, project }: Props) => {
   const router = useRouter();
   const [submitting, setSubmitting] = useState<boolean>(false);
   const [form, setForm] = useState<FormState>({
-    title: project?.title || "",
-    description: project?.description || "",
-    imageUrl: project?.imageUrl || "",
-    websiteUrl: project?.websiteUrl || "",
-    githubUrl: project?.githubUrl || "",
-    category: project?.category || { id: "", name: "" },
+    title: "",
+    description: "",
+    imageUrl: "",
+    websiteUrl: "",
+    githubUrl: "",
+    category: { id: "", name: "" },
   });
+  useEffect(() => {
+    setForm({
+      title: project?.title || "",
+      description: project?.description || "",
+      imageUrl: project?.imageUrl || "",
+      websiteUrl: project?.websiteUrl || "",
+      githubUrl: project?.githubUrl || "",
+      category: project?.category || { id: "", name: "" },
+    });
+  }, [project]);
   const handleStateChange = (
     fieldName: keyof FormState,
     value: string | Category
@@ -70,7 +80,6 @@ const ProjectForm = ({ type, project }: Props) => {
   const handleFormSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setSubmitting(true);
-    const { token } = await fetchToken();
     console.log("session", session);
     try {
       if (type === "create") {
@@ -86,6 +95,14 @@ const ProjectForm = ({ type, project }: Props) => {
         router.push("/home");
       }
       if (type === "edit") {
+        const res = await fetch("http://localhost:3000/api/project/edit", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ ...form, id: project?.id }),
+        });
+        console.log(res);
         // await updateProject(form, project?.id as string, token);
         router.push("/home");
       }
@@ -130,7 +147,6 @@ const ProjectForm = ({ type, project }: Props) => {
         placeholder="Flexibble"
         setState={(value) => handleStateChange("title", value)}
       />
-
       <FormField
         title="Description"
         state={form.description}
@@ -138,7 +154,6 @@ const ProjectForm = ({ type, project }: Props) => {
         isTextArea
         setState={(value) => handleStateChange("description", value)}
       />
-
       <FormField
         type="url"
         title="Website URL"
@@ -146,7 +161,6 @@ const ProjectForm = ({ type, project }: Props) => {
         placeholder="https://jsmastery.pro"
         setState={(value) => handleStateChange("websiteUrl", value)}
       />
-
       <FormField
         type="url"
         title="GitHub URL"
@@ -154,14 +168,12 @@ const ProjectForm = ({ type, project }: Props) => {
         placeholder="https://github.com/adrianhajdin"
         setState={(value) => handleStateChange("githubUrl", value)}
       />
-
       <CustomMenu
         title="Category"
         state={form.category.name}
         filters={categoryFilters}
         setState={(value) => handleStateChange("category", value)}
       />
-
       <div className="flexStart w-full">
         <Button
           title={

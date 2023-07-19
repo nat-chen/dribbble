@@ -7,6 +7,10 @@ export async function GET(_: Request, { params }: { params: { id: string } }) {
     where: {
       id: params.id,
     },
+    include: {
+      user: true,
+      category: true,
+    },
   });
   return NextResponse.json({ success: true, data: project }, { status: 200 });
 }

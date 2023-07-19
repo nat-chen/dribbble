@@ -5,11 +5,19 @@ import Image from "next/image";
 import { signOut } from "next-auth/react";
 import { Fragment, useState } from "react";
 import { Menu, Transition } from "@headlessui/react";
+import { redirect } from "next/navigation";
 
 import { SessionInterface } from "@/common.types";
 
 const ProfileMenu = ({ session }: { session: SessionInterface }) => {
+  console.log(session);
   const [openModal, setOpenModal] = useState(false);
+  const handleSignOut = () => {
+    signOut({
+      callbackUrl: "/auth/signin",
+      redirect: true,
+    });
+  };
   return (
     <div className="flexCenter z-10 flex-col relative">
       <Menu as="div">
@@ -17,15 +25,13 @@ const ProfileMenu = ({ session }: { session: SessionInterface }) => {
           className="flexCenter"
           onMouseEnter={() => setOpenModal(true)}
         >
-          {session?.user.avatarUrl && (
-            <Image
-              src={session.user.avatarUrl}
-              width={40}
-              height={40}
-              className="rounded-full"
-              alt="user profile image"
-            />
-          )}
+          <Image
+            src={session?.user?.avatarUrl || "/default-avatar.png"}
+            width={40}
+            height={40}
+            className="rounded-full"
+            alt="user profile image"
+          />
         </Menu.Button>
         <Transition
           show={openModal}
@@ -55,19 +61,11 @@ const ProfileMenu = ({ session }: { session: SessionInterface }) => {
               <p className="font-semibold">{session?.user?.username}</p>
             </div>
 
-            <div className="flex flex-col gap-3 pt-10 items-start w-full">
+            <div className="flex flex-col gap-3 pt-4 items-start w-full">
               <Menu.Item>
                 <Link
-                  href={`/profile/${session?.user?.id}`}
-                  className="text-sm"
-                >
-                  Work Preferences
-                </Link>
-              </Menu.Item>
-              <Menu.Item>
-                <Link
-                  href={`/profile/${session?.user?.id}`}
-                  className="text-sm"
+                  href={`/settings/${session?.user?.id}`}
+                  className="text-sm w-full"
                 >
                   Settings
                 </Link>
@@ -86,7 +84,7 @@ const ProfileMenu = ({ session }: { session: SessionInterface }) => {
                 <button
                   type="button"
                   className="text-sm"
-                  onClick={() => signOut()}
+                  onClick={handleSignOut}
                 >
                   Sign out
                 </button>

@@ -62,6 +62,7 @@ const Signin = ({ children }: { children: React.ReactNode }) => {
         <div className="py-4">
           <Input
             title="Password"
+            type="password"
             value={password}
             placeholder="6+ characters"
             handleChange={(e: ChangeEvent<HTMLInputElement>) =>
@@ -82,7 +83,7 @@ const Signin = ({ children }: { children: React.ReactNode }) => {
         </button>
         <div>
           Dont have an account?{" "}
-          <Link href="/signup" className="text-indigo-600">
+          <Link href="/auth/signup" className="text-indigo-600">
             Sign up
           </Link>
         </div>

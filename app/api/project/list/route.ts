@@ -4,12 +4,15 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
-  const name = searchParams.get("category");
-  const filter = name ? { name } : {};
+  const name = searchParams.get("category") || {};
+  const search = searchParams.get("search") || "";
   const project = await prisma.project.findMany({
     where: {
+      title: {
+        contains: search,
+      },
       category: {
-        ...filter,
+        name,
       },
     },
     include: {
