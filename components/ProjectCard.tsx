@@ -45,7 +45,7 @@ const ProjectCard = ({ id, image, title, name, avatarUrl, userId }: Props) => {
         <Link href={`/profile/${userId}`}>
           <div className="flexCenter gap-2">
             <Image
-              src={avatarUrl}
+              src={avatarUrl || "/default-avatar.png"}
               width={24}
               height={24}
               className="rounded-full"

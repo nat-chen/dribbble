@@ -1,18 +1,21 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import prisma from "@/lib/prisma";
 import { NextResponse } from "next/server";
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "@/lib/auth";
 
 export async function POST(req: Request) {
   const payload = await req.json();
   const { category, ...rest } = payload;
+  const session = await getServerSession(authOptions);
   const project = await prisma.project.create({
     data: {
       ...rest,
       user: {
-        connect: { id: "31d77e16-9f4d-4aaf-9240-ad9b5557e412" },
+        connect: { id: session?.user?.id },
       },
       category: {
-        connect: { id: "5ce14ac6-f631-4467-8fc8-f85ba8f57723" },
+        connect: { id: category.id },
       },
     },
   });

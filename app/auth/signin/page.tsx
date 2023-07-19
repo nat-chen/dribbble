@@ -33,7 +33,10 @@ const Signin = ({ children }: { children: React.ReactNode }) => {
   return (
     <div className="m-24">
       <div className="font-semibold text-2xl">Sign In to Dribbble</div>
-      <button className="w-full flex justify-center font-medium my-8 py-4 border border-slate-900 rounded">
+      <button
+        className="w-full flex justify-center font-medium my-8 py-4 border border-slate-900 rounded"
+        onClick={() => signIn("github", { callbackUrl: "/home" })}
+      >
         <Image
           src="/github.svg"
           alt="github"
