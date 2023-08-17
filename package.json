@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "prettier": "prettier --write .",
+    "prepare": "husky install"
   },
   "dependencies": {
     "@apollo/client": "^3.8.0-beta.7",
@@ -42,8 +44,12 @@
     "typescript": "5.1.6"
   },
   "devDependencies": {
+    "@commitlint/cli": "^17.7.1",
+    "@commitlint/config-conventional": "^17.7.0",
     "@grafbase/sdk": "^0.1.1",
     "@types/bcryptjs": "^2.4.2",
+    "husky": "^8.0.3",
+    "prettier": "^3.0.2",
     "prisma": "^5.0.0",
     "ts-node": "^10.9.1"
   },
