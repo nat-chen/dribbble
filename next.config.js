@@ -4,7 +4,7 @@ const nextConfig = {
     domains: ["avatars.githubusercontent.com", "res.cloudinary.com"],
   },
   experimental: {
-    serverComponentsExternalPackages: ["cloudinary", "graphql-request"],
+    serverComponentsExternalPackages: ["cloudinary"],
   },
 };
 

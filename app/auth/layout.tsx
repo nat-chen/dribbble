@@ -7,16 +7,17 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         <Image
           src="/entry.png"
           alt="entry background"
-          width={100}
-          height={100}
+          width={900}
+          height={1200}
           style={{
             width: "100%",
             height: "100%",
-            objectFit: "fill",
           }}
         />
       </div>
-      <div className="w-3/5 h-full">{children}</div>
+      <div className="w-3/5 h-full flex justify-center">
+        <div className="max-w-[720px] w-full">{children}</div>
+      </div>
     </div>
   );
 }

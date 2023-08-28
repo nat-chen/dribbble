@@ -1,13 +1,12 @@
 "use client";
 
 import Input from "@/components/Input";
-import Link from "next/link";
 import Image from "next/image";
+import Link from "next/link";
 import { useState } from "react";
-import { redirect } from "next/navigation";
 
-import { toast } from "react-toastify";
 import { signIn } from "next-auth/react";
+import { toast } from "react-toastify";
 
 const Signup = ({ children }: { children: React.ReactNode }) => {
   const [form, setForm] = useState({
