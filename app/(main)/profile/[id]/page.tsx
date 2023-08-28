@@ -1,4 +1,3 @@
-import { getUserProjects } from "@/lib/actions";
 import ProfilePage from "@/components/ProfilePage";
 
 type Props = {

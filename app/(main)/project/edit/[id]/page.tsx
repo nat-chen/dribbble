@@ -4,9 +4,6 @@ import { useParams } from "next/navigation";
 
 import Modal from "@/components/Modal";
 import ProjectForm from "@/components/ProjectForm";
-import { getCurrentUser } from "@/lib/sessions";
-import { getProjectDetails } from "@/lib/actions";
-import { ProjectInterface } from "@/common.types";
 import { useEffect, useState } from "react";
 
 const EditProject = ({ params: { id } }: { params: { id: string } }) => {

@@ -1,11 +1,5 @@
 import { ProjectInterface } from "@/common.types";
-import Categories from "@/components/Categories";
-import LoadMore from "@/components/LoadMore";
-import ProjectCard from "@/components/ProjectCard";
-import { fetchAllProjects } from "@/lib/actions";
-import { getClient } from "@/lib/apollo";
-import { ApolloProvider, gql, useQuery } from "@apollo/client";
-import { useSuspenseQuery } from "@apollo/experimental-nextjs-app-support/ssr";
+import { gql } from "@apollo/client";
 
 type SearchParams = {
   category?: string | null;

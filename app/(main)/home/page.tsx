@@ -2,15 +2,10 @@
 
 import { ProjectInterface } from "@/common.types";
 import Categories from "@/components/Categories";
-import LoadMore from "@/components/LoadMore";
 import ProjectCard from "@/components/ProjectCard";
-import { fetchAllProjects } from "@/lib/actions";
-import { getClient } from "@/lib/apollo";
 import { useAppSelector } from "@/redux/hook";
-import { ApolloProvider, gql, useQuery } from "@apollo/client";
-import { useSuspenseQuery } from "@apollo/experimental-nextjs-app-support/ssr";
 import { useSearchParams } from "next/navigation";
-import { use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 type SearchParams = {
   category?: string | null;
